@@ -10,49 +10,47 @@ export const App = () => {
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
 
-  // state = {
-  //   good: 0,
-  //   neutral: 0,
-  //   bad: 0,
-  // };
+  const onLeaveFeedback = type => {
+    switch (type) {
+      case 'good':
+        setGood(prev => prev + 1);
+        break;
+      case 'neutral':
+        setNeutral(prev => prev + 1);
+        break;
+      case 'bad':
+        setBad(prev => prev + 1);
+        break;
 
-  const onLeaveFeedback = state => {
-    this.setState(prevState => ({ [state]: prevState[state] + 1 }));
+      default:
+        break;
+    }
   };
 
-  // onLeaveFeedback = state => {
-  //   this.setState(prevState => ({ [state]: prevState[state] + 1 }));
-  // };
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
+  };
 
-  // countTotalFeedback = () => {
-  //   const { good, neutral, bad } = this.state;
-  //   return good + neutral + bad;
-  // };
+  const countPositiveFeedbackPercentage = () => {
+    const total = countTotalFeedback();
+    return Math.round((good / total) * 100) || 0;
+  };
 
-  // countPositiveFeedbackPercentage = () => {
-  //   const { good } = this.state;
-  //   const total = this.countTotalFeedback();
-  //   return Math.round((good / total) * 100) || 0;
-  // };
+  const options = ['good', 'neutral', 'bad'];
 
-  // render() {
-  //   const { good, neutral, bad } = this.state;
-  //   const options = Object.keys(this.state);
-  //   const totalFeedback = this.countTotalFeedback();
-  //   const totalPositive = this.countPositiveFeedbackPercentage();
   return (
     <Container>
       <Section title="Please leave feedback">
         <FeedbackOptions onLeaveFeedback={onLeaveFeedback} options={options} />
       </Section>
       <Section title="Statistics">
-        {totalFeedback !== 0 ? (
+        {countPositiveFeedbackPercentage() !== 0 ? (
           <Statistics
             good={good}
             neutral={neutral}
             bad={bad}
-            total={totalFeedback}
-            positivePercentage={totalPositive}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
           />
         ) : (
           <Notification message="There is no feedback" />
